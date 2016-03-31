@@ -2,7 +2,7 @@
 from config import TELEGRAM_API
 import logging
 from telegram.ext import Updater
-from hoster import get_balance
+from hoster import get_balance, action_with
 from minecraft import get_info
 import re
 
@@ -19,6 +19,11 @@ def start(bot, update):
 
 def balance(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text='Баланс счета: %s руб.' % get_balance()[1:-1])
+
+
+def reboot(bot, update):
+    action_with('PowerReboot')
+    bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
 
 
 def status(bot, update):
@@ -48,6 +53,7 @@ job_queue = updater.job_queue
 dispatcher = updater.dispatcher
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('balance', balance)
+dispatcher.addTelegramCommandHandler('reboot', reboot)
 dispatcher.addTelegramCommandHandler('status', status)
 dispatcher.addUnknownTelegramCommandHandler(unknown)
 updater.start_polling()

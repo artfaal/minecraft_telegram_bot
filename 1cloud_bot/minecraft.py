@@ -58,5 +58,3 @@ def get_info(host=ADDRESS, port=25565):
 
     # Load json and return
     return json.loads(d.decode('utf8'))['players']
-
-print get_info()
