@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+MINECRAFT_ADDR = 'localhost'
+TELEGRAM_TOKEN = ''
+# AWS_ID_INSTANCE = ''
+TIME_RUN_SERVER = 180

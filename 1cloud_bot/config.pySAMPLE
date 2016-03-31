@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+ADDRESS = 'localhost'
+HOSTING_API = ''
+SERVER_ID = 
+TELEGRAM_API = ''
