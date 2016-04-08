@@ -35,7 +35,9 @@ def status(bot, update):
             people = []
             for i in people_array:
                 people.append(i['name'])
-            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % people)
+            a = str(', '.join(people))
+            print type(a)
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % a)
         except Exception, e:
             bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен, но пуст')
             pass
