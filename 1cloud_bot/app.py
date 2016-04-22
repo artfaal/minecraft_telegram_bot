@@ -10,15 +10,23 @@ import re
 #                     format='%(asctime)s - %(name)s - %(levelname)s \
 #                             - %(message)s')
 
-online = False
-
 
 def start(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text='\xF0\x9F\x98\x81 Приветствую милый друг.Если что не так, пиши мне - @artfaal')
 
 
 def balance(bot, update):
-    bot.sendMessage(chat_id=update.message.chat_id, text='Баланс счета: %s руб.' % get_balance()[1:-1])
+    bot.sendMessage(chat_id=update.message.chat_id, text='Баланс счета: %s руб.' % str(get_balance()))
+
+
+def on(bot, update):
+    action_with('PowerOn')
+    bot.sendMessage(chat_id=update.message.chat_id, text='Запускаем сервер')
+
+
+def off(bot, update):
+    action_with('PowerOff')
+    bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
 
 
 def reboot(bot, update):
@@ -29,7 +37,6 @@ def reboot(bot, update):
 def status(bot, update):
     try:
         r = get_info()
-        online = True
         try:
             people_array = r['sample']
             people = []
@@ -43,7 +50,6 @@ def status(bot, update):
             pass
     except Exception, e:
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер недоступен\nКод ошибки:%s' % e)
-        online = False
 
 
 def unknown(bot, update):
@@ -55,6 +61,8 @@ job_queue = updater.job_queue
 dispatcher = updater.dispatcher
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('balance', balance)
+dispatcher.addTelegramCommandHandler('on', on)
+dispatcher.addTelegramCommandHandler('off', off)
 dispatcher.addTelegramCommandHandler('reboot', reboot)
 dispatcher.addTelegramCommandHandler('status', status)
 dispatcher.addUnknownTelegramCommandHandler(unknown)
