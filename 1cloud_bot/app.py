@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from config import TELEGRAM_API
 import logging
+from time import sleep
 from telegram.ext import Updater
 from hoster import get_balance, action_with
 from minecraft import get_info
-import re
+from ssh import stop_minecraft
 
 # logging.basicConfig(level=logging.DEBUG,
 #                     format='%(asctime)s - %(name)s - %(levelname)s \
@@ -25,11 +26,15 @@ def on(bot, update):
 
 
 def off(bot, update):
+    stop_minecraft()
+    sleep(7)
     action_with('PowerOff')
     bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
 
 
 def reboot(bot, update):
+    stop_minecraft()
+    sleep(7)
     action_with('PowerReboot')
     bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
 
@@ -59,12 +64,13 @@ def unknown(bot, update):
 updater = Updater(token=TELEGRAM_API)
 job_queue = updater.job_queue
 dispatcher = updater.dispatcher
-dispatcher.addTelegramCommandHandler('start', start)
-dispatcher.addTelegramCommandHandler('balance', balance)
-dispatcher.addTelegramCommandHandler('on', on)
-dispatcher.addTelegramCommandHandler('off', off)
-dispatcher.addTelegramCommandHandler('reboot', reboot)
-dispatcher.addTelegramCommandHandler('status', status)
+
+
+def use_commands():
+    cmd_list = [start, balance, on, off, reboot, status]
+    for m in cmd_list:
+        dispatcher.addTelegramCommandHandler(m.__name__, m)
+use_commands()
 dispatcher.addUnknownTelegramCommandHandler(unknown)
 updater.start_polling()
 updater.idle()

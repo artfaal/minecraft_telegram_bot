@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 ADDRESS = 'localhost'
 HOSTING_API = ''
-SERVER_ID = 
+SERVER_ID =
 TELEGRAM_API = ''
+START_SCRIPT = '/path/to/script'
+STOP_SCRIPT = '/path/to/script'
