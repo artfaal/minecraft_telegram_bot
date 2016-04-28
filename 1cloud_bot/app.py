@@ -27,6 +27,7 @@ def on(bot, update):
 
 def off(bot, update):
     stop_minecraft()
+    bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
     sleep(7)
     action_with('PowerOff')
     bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
@@ -34,6 +35,7 @@ def off(bot, update):
 
 def reboot(bot, update):
     stop_minecraft()
+    bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
     sleep(7)
     action_with('PowerReboot')
     bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
