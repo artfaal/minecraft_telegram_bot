@@ -41,20 +41,22 @@ def reboot(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
 
 
+def convert_array_to_str(array):
+    names = []
+    for i in array:
+        names.append(i['name'])
+    formated_names = str(', '.join(names))
+    return formated_names
+
+
 def status(bot, update):
     try:
-        r = get_info()
+        raw_json_info = get_info()
         try:
-            people_array = r['sample']
-            people = []
-            for i in people_array:
-                people.append(i['name'])
-            a = str(', '.join(people))
-            print type(a)
-            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % a)
+            people_array = raw_json_info['sample']
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % convert_array_to_str(people_array))
         except Exception, e:
             bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен, но пуст')
-            pass
     except Exception, e:
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер недоступен\nКод ошибки:%s' % e)
 
