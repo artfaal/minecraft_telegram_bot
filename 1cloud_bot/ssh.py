@@ -21,8 +21,30 @@ def run_command(cmd):
 
 
 def start_minecraft():
-    run_command('sh %s' % START_SCRIPT)
+    return run_command('sh %s' % START_SCRIPT)
 
 
 def stop_minecraft():
-    run_command('sh %s' % STOP_SCRIPT)
+    return run_command('sh %s' % STOP_SCRIPT)
+
+
+def free_mem():
+    raw = run_command('cat /proc/meminfo | grep -i "MemFree"')
+    result = re.findall(r'\d+', raw[0])[0]
+    return result  # Return result in KB
+
+
+def cpu_load():
+    raw = run_command('cat /proc/loadavg')
+    result = raw[0].split()[:-2]
+    return result
+
+
+def swap():
+    swap_total = run_command('cat /proc/meminfo | grep -i "SwapTotal"')
+    swap_total = re.findall(r'\d+', swap_total[0])[0]
+
+    swap_free = run_command('cat /proc/meminfo | grep -i "SwapFree"')
+    swap_free = re.findall(r'\d+', swap_free[0])[0]
+
+    return int(swap_total) - int(swap_free)
