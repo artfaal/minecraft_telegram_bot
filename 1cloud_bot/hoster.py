@@ -32,3 +32,10 @@ def action_with(action):
     body = {'Type': action}
     r = requests.post(dest, headers=AUTH, data=json.dumps(body))
     return response(r)
+
+
+def is_server_power_on():
+    if server_status()['IsPowerOn'] == True:
+        return True
+    else:
+        return False
