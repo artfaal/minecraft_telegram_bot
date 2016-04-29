@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from config import TELEGRAM_API
 import logging
+from config import TELEGRAM_API, DEBUG
 from time import sleep
 from telegram.ext import Updater
 from hoster import get_balance, action_with
 from minecraft import get_info
 from ssh import stop_minecraft
 
-# logging.basicConfig(level=logging.DEBUG,
-#                     format='%(asctime)s - %(name)s - %(levelname)s \
-#                             - %(message)s')
+
+if DEBUG:
+    import logging
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s \
+                                - %(message)s')
 
 
 def start(bot, update):

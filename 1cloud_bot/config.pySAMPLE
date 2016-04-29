@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+DEBUG = False
 ADDRESS = 'localhost'
 HOSTING_API = ''
 SERVER_ID =
