@@ -32,9 +32,10 @@ def on(bot, update):
 
 def off(bot, update):
     if is_server_power_on():
-        bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
-        stop_minecraft()
-        sleep(7)
+        if is_minecraft_run():
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
+            stop_minecraft()
+            sleep(7)
         action_with('PowerOff')
         bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
     else:
@@ -65,9 +66,10 @@ def stop_script(bot, update):
 
 def reboot(bot, update):
     if is_server_power_on():
-        bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
-        stop_minecraft()
-        sleep(7)
+        if is_minecraft_run:
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
+            stop_minecraft()
+            sleep(7)
         action_with('PowerReboot')
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
     else:
@@ -96,7 +98,6 @@ def status(bot, update):
     if is_server_power_on():
         try:
             json_info = get_info()
-            print json_info
             if json_info['online'] == 0:
                 bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен, но пуст')
             else:
