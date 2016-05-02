@@ -50,5 +50,5 @@ def swap():
     return int(swap_total) - int(swap_free)
 
 
-def reboot():
+def reboot_cmd():
     run_command('reboot')
