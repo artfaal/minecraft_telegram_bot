@@ -69,7 +69,7 @@ def reboot(bot, update):
         if is_minecraft_run:
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
-            sleep(7)
+            sleep(4)
         reboot()
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
     else:
