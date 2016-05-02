@@ -4,7 +4,7 @@ from time import sleep
 from telegram.ext import Updater
 from hoster import get_balance, action_with, is_server_power_on
 from minecraft import get_info, is_minecraft_run
-from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap
+from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot
 
 
 if DEBUG:
@@ -70,10 +70,10 @@ def reboot(bot, update):
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
             sleep(7)
-        action_with('PowerReboot')
+        reboot()
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
     else:
-        action_with('PowerReboot')
+        reboot()
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер был выключен. Включаем')
 
 

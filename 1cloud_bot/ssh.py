@@ -48,3 +48,7 @@ def swap():
     swap_free = re.findall(r'\d+', swap_free[0])[0]
 
     return int(swap_total) - int(swap_free)
+
+
+def reboot():
+    run_command('reboot')
