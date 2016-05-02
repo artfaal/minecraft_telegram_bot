@@ -52,3 +52,10 @@ def swap():
 
 def reboot_cmd():
     run_command('reboot')
+
+
+def get_log():
+    return run_command('cat /var/games/minecraft/logs/latest.log')
+
+
+print get_log()

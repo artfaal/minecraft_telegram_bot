@@ -2,9 +2,10 @@
 from config import TELEGRAM_API, DEBUG
 from time import sleep
 from telegram.ext import Updater
+from telegram import ParseMode
 from hoster import get_balance, action_with, is_server_power_on
 from minecraft import get_info, is_minecraft_run
-from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd
+from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd, get_log
 
 
 if DEBUG:
@@ -109,6 +110,11 @@ def status(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер в данный момент выключен')
 
 
+def minecraft_latest_log(bot, update):
+    log = get_log()
+    bot.sendMessage(chat_id=update.message.chat_id, text="```\n%s\n```" % log, parse_mode=ParseMode.MARKDOWN)
+
+
 def unknown(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text="Таких команд я не знаю... \xF0\x9F\x98\xB1")
 
@@ -119,7 +125,7 @@ dispatcher = updater.dispatcher
 
 
 def use_commands():
-    cmd_list = [start, balance, on, off, start_script, stop_script, reboot, server_info, status]
+    cmd_list = [start, balance, on, off, start_script, stop_script, reboot, server_info, status, minecraft_latest_log]
     for m in cmd_list:
         dispatcher.addTelegramCommandHandler(m.__name__, m)
 use_commands()
@@ -131,6 +137,7 @@ job_queue.stop()
 
 # status - Статус Майнкрафта
 # server_info - Информация о сервере
+# minecraft_latest_log - Лог майнкрафта
 # on - Включение сервера
 # off - Выключение сервера
 # reboot - Перезапуск сервера
