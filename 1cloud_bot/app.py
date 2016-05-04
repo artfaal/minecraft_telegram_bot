@@ -5,7 +5,7 @@ from telegram.ext import Updater
 from telegram import ParseMode
 from hoster import get_balance, action_with, is_server_power_on
 from minecraft import get_info, is_minecraft_run
-from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd, get_log
+from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd, get_log, shutdown_cmd
 
 
 if DEBUG:
@@ -13,6 +13,9 @@ if DEBUG:
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - %(levelname)s \
                                 - %(message)s')
+
+# CONSTANT
+SLEEP_TIME = 10
 
 
 def start(bot, update):
@@ -36,7 +39,8 @@ def off(bot, update):
         if is_minecraft_run():
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
-            sleep(7)
+            sleep(SLEEP_TIME)
+        shutdown_cmd()
         action_with('PowerOff')
         bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
     else:
@@ -70,9 +74,9 @@ def reboot(bot, update):
         if is_minecraft_run:
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
-            sleep(4)
-        reboot_cmd()
+            sleep(SLEEP_TIME)
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
+        reboot_cmd()
     else:
         action_with('PowerOn')
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер был выключен. Включаем')

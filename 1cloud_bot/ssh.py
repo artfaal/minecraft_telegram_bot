@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from config import SSH_USER, ADDRESS, START_SCRIPT, STOP_SCRIPT
+from config import SSH_USER, ADDRESS, START_SCRIPT, STOP_SCRIPT, ACCESS_FOR_SCREEN_SESSION
 import subprocess
-import sys
 import re
 
 
@@ -15,7 +14,7 @@ def run_command(cmd):
     result = ssh.stdout.readlines()
     if result == []:
         error = ssh.stderr.readlines()
-        print >>sys.stderr, "ERROR: %s" % error
+        return "ERROR: %s" % error
     else:
         return result
 
@@ -54,8 +53,13 @@ def reboot_cmd():
     run_command('reboot')
 
 
+def shutdown_cmd():
+    run_command('shutdown -h now')
+
+
 def get_log():
-    return run_command('cat /var/games/minecraft/logs/latest.log')
+    return str(run_command('cat /var/games/minecraft/logs/latest.log'))
 
 
-print get_log()
+# def minecraft_command(cmd=None):
+#     return run_command("%s '/%s''\n'" % (ACCESS_FOR_SCREEN_SESSION, cmd))
