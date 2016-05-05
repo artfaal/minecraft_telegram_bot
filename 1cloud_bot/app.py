@@ -71,7 +71,7 @@ def stop_script(bot, update):
 
 def reboot(bot, update):
     if is_server_power_on():
-        if is_minecraft_run:
+        if is_minecraft_run():
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
             sleep(SLEEP_TIME)
@@ -82,6 +82,14 @@ def reboot(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер был выключен. Включаем')
 
 
+def convert_array_to_str(array):
+    names = []
+    for i in array:
+        names.append(i['name'])
+    formated_names = str(', '.join(names))
+    return formated_names
+
+
 def server_info(bot, update):
     mem = free_mem()
     cpu = cpu_load()
@@ -89,14 +97,6 @@ def server_info(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text='Free RAM:\n%s KB\n==========\nЗагрузка ядер:\nCPU 1: %s\nCPU 2: %s\nCPU 3: %s\n\n' % (mem, cpu[0], cpu[1], cpu[2]))
     if swap_file > 0:
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер начал использовать файл подкачки. Желательно перезапустить сервер.\nSwap: %s KB' % swap_file)
-
-
-def convert_array_to_str(array):
-    names = []
-    for i in array:
-        names.append(i['name'])
-    formated_names = str(', '.join(names))
-    return formated_names
 
 
 def status(bot, update):
@@ -114,9 +114,14 @@ def status(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер в данный момент выключен')
 
 
+def global_info(bot, update):
+    status(bot, update)
+    server_info(bot, update)
+
+
 def minecraft_latest_log(bot, update):
     log = get_log()
-    bot.sendMessage(chat_id=update.message.chat_id, text="```\n%s\n```" % log, parse_mode=ParseMode.MARKDOWN)
+    bot.sendMessage(chat_id=update.message.chat_id, text="```\n %s \n```" % log, parse_mode=ParseMode.MARKDOWN)
 
 
 def unknown(bot, update):
@@ -129,7 +134,7 @@ dispatcher = updater.dispatcher
 
 
 def use_commands():
-    cmd_list = [start, balance, on, off, start_script, stop_script, reboot, server_info, status, minecraft_latest_log]
+    cmd_list = [start, balance, on, off, start_script, stop_script, reboot, global_info, minecraft_latest_log]
     for m in cmd_list:
         dispatcher.addTelegramCommandHandler(m.__name__, m)
 use_commands()
@@ -139,8 +144,7 @@ updater.idle()
 job_queue.stop()
 
 
-# status - Статус Майнкрафта
-# server_info - Информация о сервере
+# global_info - Общая информация о сервере
 # minecraft_latest_log - Лог майнкрафта
 # on - Включение сервера
 # off - Выключение сервера

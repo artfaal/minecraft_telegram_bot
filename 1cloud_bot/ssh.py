@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from config import SSH_USER, ADDRESS, START_SCRIPT, STOP_SCRIPT, ACCESS_FOR_SCREEN_SESSION
+from config import SSH_USER, ADDRESS, START_SCRIPT, STOP_SCRIPT, PATH_TO_MINECRAFT_LOG
 import subprocess
 import re
 
@@ -58,8 +57,5 @@ def shutdown_cmd():
 
 
 def get_log():
-    return str(run_command('cat /var/games/minecraft/logs/latest.log'))
-
-
-# def minecraft_command(cmd=None):
-#     return run_command("%s '/%s''\n'" % (ACCESS_FOR_SCREEN_SESSION, cmd))
+    raw = run_command('cat %s' % PATH_TO_MINECRAFT_LOG)
+    return ''.join(raw)
