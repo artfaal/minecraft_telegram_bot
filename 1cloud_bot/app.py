@@ -3,9 +3,9 @@ from config import TELEGRAM_API, DEBUG
 from time import sleep
 from telegram.ext import Updater
 from telegram import ParseMode
-from hoster import get_balance, action_with, is_server_power_on
+from hoster import get_balance, action_with
 from minecraft import get_info, is_minecraft_run
-from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd, get_log, shutdown_cmd
+from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd, get_log, shutdown_cmd, is_server_on
 
 
 if DEBUG:
@@ -27,7 +27,7 @@ def balance(bot, update):
 
 
 def on(bot, update):
-    if is_server_power_on():
+    if is_server_on():
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер уже включен')
     else:
         action_with('PowerOn')
@@ -35,11 +35,12 @@ def on(bot, update):
 
 
 def off(bot, update):
-    if is_server_power_on():
+    if is_server_on():
         if is_minecraft_run():
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
             sleep(SLEEP_TIME)
+            minecraft_latest_log(bot, update)
         shutdown_cmd()
         action_with('PowerOff')
         bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
@@ -48,7 +49,7 @@ def off(bot, update):
 
 
 def start_script(bot, update):
-    if is_server_power_on():
+    if is_server_on():
         if is_minecraft_run():
             bot.sendMessage(chat_id=update.message.chat_id, text='Майнкрафт уже запушен')
         else:
@@ -59,7 +60,7 @@ def start_script(bot, update):
 
 
 def stop_script(bot, update):
-    if is_server_power_on():
+    if is_server_on():
         if is_minecraft_run():
             stop_minecraft()
             bot.sendMessage(chat_id=update.message.chat_id, text='Активируем скрипт завершения')
@@ -70,11 +71,12 @@ def stop_script(bot, update):
 
 
 def reboot(bot, update):
-    if is_server_power_on():
+    if is_server_on():
         if is_minecraft_run():
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
             sleep(SLEEP_TIME)
+            minecraft_latest_log(bot, update)
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
         reboot_cmd()
     else:
@@ -100,23 +102,23 @@ def server_info(bot, update):
 
 
 def status(bot, update):
-    if is_server_power_on():
-        try:
-            json_info = get_info()
-            if json_info['online'] == 0:
-                bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен, но пуст')
-            else:
-                people_array = json_info['sample']
-                bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % convert_array_to_str(people_array))
-        except Exception, e:
-            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер включен. Но Minecraft не запущен.\nКод ошибки:%s' % e)
-    else:
-        bot.sendMessage(chat_id=update.message.chat_id, text='Сервер в данный момент выключен')
+    try:
+        json_info = get_info()
+        if json_info['online'] == 0:
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен, но пуст')
+        else:
+            people_array = json_info['sample']
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % convert_array_to_str(people_array))
+    except Exception, e:
+        bot.sendMessage(chat_id=update.message.chat_id, text='Сервер включен. Но Minecraft не запущен.\nКод ошибки:%s' % e)
 
 
 def global_info(bot, update):
-    status(bot, update)
-    server_info(bot, update)
+    if is_server_on():
+        status(bot, update)
+        server_info(bot, update)
+    else:
+        bot.sendMessage(chat_id=update.message.chat_id, text='Сервер в данный момент выключен')
 
 
 def minecraft_latest_log(bot, update):

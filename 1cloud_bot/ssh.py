@@ -2,6 +2,7 @@
 from config import SSH_USER, ADDRESS, START_SCRIPT, STOP_SCRIPT, PATH_TO_MINECRAFT_LOG
 import subprocess
 import re
+import os
 
 
 # Ports are handled in ~/.ssh/config since we use OpenSSH
@@ -59,3 +60,11 @@ def shutdown_cmd():
 def get_log():
     raw = run_command('cat %s' % PATH_TO_MINECRAFT_LOG)
     return ''.join(raw)
+
+
+def is_server_on():
+    response = os.system("ping -c 1 %s >/dev/null" % ADDRESS)
+    if response == 0:
+        return True
+    else:
+        return False
