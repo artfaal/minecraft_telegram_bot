@@ -143,12 +143,16 @@ updater.start_polling()
 updater.idle()
 job_queue.stop()
 
+"""
+Autocomplete commands. Sent it to @BotFather
+/setcommands
 
-# global_info - Общая информация о сервере
-# minecraft_latest_log - Лог майнкрафта
-# on - Включение сервера
-# off - Выключение сервера
-# reboot - Перезапуск сервера
-# balance - Проверить баланс
-# start_script - Скрипт запуска клиента
-# stop_script - Скрипт остановки клиента
+global_info - Общая информация о сервере
+minecraft_latest_log - Лог майнкрафта
+on - Включение сервера
+off - Выключение сервера
+reboot - Перезапуск сервера
+balance - Проверить баланс
+start_script - Скрипт запуска клиента
+stop_script - Скрипт остановки клиента
+"""
