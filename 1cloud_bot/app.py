@@ -40,7 +40,7 @@ def off(bot, update):
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
             sleep(SLEEP_TIME)
-            minecraft_latest_log(bot, update)
+            minecraft_latest_log(bot, update, 'tail')
         shutdown_cmd()
         power_off_instance()
         bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
@@ -64,6 +64,7 @@ def stop_script(bot, update):
         if is_minecraft_run():
             stop_minecraft()
             bot.sendMessage(chat_id=update.message.chat_id, text='Активируем скрипт завершения')
+            minecraft_latest_log(bot, update, 'tail')
         else:
             bot.sendMessage(chat_id=update.message.chat_id, text='Майнкрафт уже выключен')
     else:
@@ -76,20 +77,12 @@ def reboot(bot, update):
             bot.sendMessage(chat_id=update.message.chat_id, text='Сохраняем мир...')
             stop_minecraft()
             sleep(SLEEP_TIME)
-            minecraft_latest_log(bot, update)
+            minecraft_latest_log(bot, update, 'tail')
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
         reboot_cmd()
     else:
         power_on_instance()
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер был выключен. Включаем')
-
-
-def convert_array_to_str(array):
-    names = []
-    for i in array:
-        names.append(i['name'])
-    formated_names = str(', '.join(names))
-    return formated_names
 
 
 def server_info(bot, update):
@@ -101,6 +94,14 @@ def server_info(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер начал использовать файл подкачки. Желательно перезапустить сервер.\nSwap: %s KB' % swap_file)
 
 
+def _convert_array_to_str(array):
+    names = []
+    for i in array:
+        names.append(i['name'])
+    formated_names = str(', '.join(names))
+    return formated_names
+
+
 def status(bot, update):
     try:
         json_info = get_info()
@@ -108,7 +109,7 @@ def status(bot, update):
             bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен, но пуст')
         else:
             people_array = json_info['sample']
-            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % convert_array_to_str(people_array))
+            bot.sendMessage(chat_id=update.message.chat_id, text='Сервер запущен. Присутствуют: %s.' % _convert_array_to_str(people_array))
     except Exception, e:
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер включен. Но Minecraft не запущен.\nКод ошибки:%s' % e)
 
@@ -121,8 +122,8 @@ def global_info(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер в данный момент выключен')
 
 
-def minecraft_latest_log(bot, update):
-    log = get_log()
+def minecraft_latest_log(bot, update, tail=None):
+    log = get_log(tail)
     bot.sendMessage(chat_id=update.message.chat_id, text="```\n %s \n```" % log, parse_mode=ParseMode.MARKDOWN)
 
 
