@@ -27,11 +27,19 @@ def server_status():
 
 
 # Action: PowerOn, PowerOff, PowerReboot
-def action_with(action):
+def _action_with(action):
     dest = 'https://api.1cloud.ru/Server/%s/Action' % SERVER_ID
     body = {'Type': action}
     r = requests.post(dest, headers=AUTH, data=json.dumps(body))
     return response(r)
+
+
+def power_on_instance():
+    return _action_with('PowerOn')
+
+
+def power_off_instance():
+    return _action_with('PowerOff')
 
 # DEPRECATED
 # def is_server_power_on():

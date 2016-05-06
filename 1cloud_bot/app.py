@@ -3,7 +3,7 @@ from config import TELEGRAM_API, DEBUG
 from time import sleep
 from telegram.ext import Updater
 from telegram import ParseMode
-from hoster import get_balance, action_with
+from hoster import get_balance, power_on_instance, power_off_instance
 from minecraft import get_info, is_minecraft_run
 from ssh import stop_minecraft, start_minecraft, free_mem, cpu_load, swap, reboot_cmd, get_log, shutdown_cmd, is_server_on
 
@@ -30,7 +30,7 @@ def on(bot, update):
     if is_server_on():
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер уже включен')
     else:
-        action_with('PowerOn')
+        power_on_instance()
         bot.sendMessage(chat_id=update.message.chat_id, text='Запускаем сервер')
 
 
@@ -42,7 +42,7 @@ def off(bot, update):
             sleep(SLEEP_TIME)
             minecraft_latest_log(bot, update)
         shutdown_cmd()
-        action_with('PowerOff')
+        power_off_instance()
         bot.sendMessage(chat_id=update.message.chat_id, text='Выключаем сервер')
     else:
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер уже выключен')
@@ -80,7 +80,7 @@ def reboot(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text='Перезапускаем сервер')
         reboot_cmd()
     else:
-        action_with('PowerOn')
+        power_on_instance()
         bot.sendMessage(chat_id=update.message.chat_id, text='Сервер был выключен. Включаем')
 
 
