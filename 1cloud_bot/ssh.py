@@ -20,7 +20,7 @@ def _run_command(cmd):
 
 
 def is_server_on():
-    response = os.system("ping -c 1 -t 3 %s >/dev/null" % ADDRESS)
+    response = os.system("ping -c 1 %s >/dev/null" % ADDRESS)
     if response == 0:
         return True
     else:
