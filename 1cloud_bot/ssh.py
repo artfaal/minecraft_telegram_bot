@@ -25,6 +25,12 @@ def start_minecraft():
 
 def stop_minecraft():
     return run_command('sh %s' % STOP_SCRIPT)
+def is_server_on():
+    response = os.system("ping -c 1 -t 3 %s >/dev/null" % ADDRESS)
+    if response == 0:
+        return True
+    else:
+        return False
 
 
 def free_mem():
