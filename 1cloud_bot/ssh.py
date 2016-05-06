@@ -72,5 +72,22 @@ def is_server_on():
     response = os.system("ping -c 1 %s >/dev/null" % ADDRESS)
     if response == 0:
         return True
+def _remove_trash_info_from_log(input_list):
+    formatted_list = []
+    junk = ['[', ']', 'Server thread/', 'chunks for level ', 'INFO: ']
+    for line in input_list:
+        formatted_string = line
+        for i in junk:
+            formatted_string = formatted_string.replace(i, '')
+        formatted_list.append(formatted_string)
+    return formatted_list
+
+
+def get_log(tail=False):
+    raw = _run_command('cat %s' % PATH_TO_MINECRAFT_LOG)
+    pretty_log = _remove_trash_info_from_log(raw)
+    if tail:
+        tail_lines = -10
+        return ''.join(pretty_log[tail_lines:])
     else:
-        return False
+        return ''.join(pretty_log)
